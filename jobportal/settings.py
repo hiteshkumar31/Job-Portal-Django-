@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-#_r^lwkkpjc_q!hw^c756&k7$$bts7k(1$h%aou&sa=5zaf^sv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['job-portal-django-bazf.vercel.app',]
+ALLOWED_HOSTS = ['job-portal-django-bazf.vercel.app', 'job-portal-django-kypn-f0vocq5yq-dr-stranges-projects-821cf905.vercel.app']
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
