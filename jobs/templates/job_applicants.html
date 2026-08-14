@@ -1,0 +1,715 @@
+{% extends "base.html" %}
+
+{% block title %}Applicants | {{ job.title }}{% endblock %}
+
+
+{% block content %}
+
+<div class="mb-4">
+
+    <a
+        href="{% url 'my-jobs' %}"
+        style="font-weight: 500;"
+    >
+        &larr; Back to My Posted Jobs
+    </a>
+
+</div>
+
+
+<!-- Page Header -->
+
+<div style="margin-bottom: 2rem;">
+
+    <h1
+        style="
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        "
+    >
+        Applicants
+    </h1>
+
+    <p style="color: var(--text-muted);">
+
+        Applicants for
+        <strong>{{ job.title }}</strong>
+
+        at {{ job.company_name }}
+
+    </p>
+
+</div>
+
+
+<!-- Applicants Container -->
+
+<div
+    class="card"
+    style="
+        padding: 0;
+        overflow: hidden;
+    "
+>
+
+
+{% if applications %}
+
+
+    {% for application in applications %}
+
+
+        <!-- ================================================= -->
+        <!-- APPLICANT CARD -->
+        <!-- ================================================= -->
+
+        <div
+            style="
+                padding: 1.75rem;
+                border-bottom: 1px solid var(--border);
+            "
+        >
+
+
+            <!-- ================================================= -->
+            <!-- TOP SECTION -->
+            <!-- ================================================= -->
+
+            <div
+                style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    gap: 1rem;
+                    flex-wrap: wrap;
+                "
+            >
+
+
+                <!-- Applicant Basic Information -->
+
+                <div
+                    style="
+                        display: flex;
+                        gap: 1rem;
+                        align-items: center;
+                    "
+                >
+
+
+                    <!-- Profile Picture -->
+
+                    {% if application.applicant.profile.profile_pic %}
+
+                        <img
+                            src="{{ application.applicant.profile.profile_pic.url }}"
+                            alt="Profile Picture"
+                            style="
+                                width: 70px;
+                                height: 70px;
+                                object-fit: cover;
+                                border-radius: 50%;
+                                border: 2px solid var(--border);
+                            "
+                        >
+
+                    {% else %}
+
+                        <div
+                            style="
+                                width: 70px;
+                                height: 70px;
+                                border-radius: 50%;
+                                background: var(--primary-light);
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: var(--primary);
+                                font-size: 1.5rem;
+                                font-weight: 700;
+                            "
+                        >
+
+                            {{ application.applicant.username|first|upper }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Name / Email -->
+
+                    <div>
+
+                        <h3
+                            style="
+                                margin-bottom: 0.4rem;
+                                color: var(--text-main);
+                            "
+                        >
+
+                            {{ application.applicant.username }}
+
+                        </h3>
+
+
+                        <p
+                            style="
+                                margin: 0 0 0.4rem;
+                                color: var(--text-muted);
+                            "
+                        >
+
+                            {{ application.applicant.email }}
+
+                        </p>
+
+
+                        <p
+                            style="
+                                margin: 0;
+                                color: var(--text-muted);
+                                font-size: 0.9rem;
+                            "
+                        >
+
+                            Applied on
+                            {{ application.date_applied|date:"M d, Y" }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- CURRENT STATUS -->
+                <!-- ================================================= -->
+
+                <div>
+
+
+                    {% if application.status == "applied" %}
+
+                        <span
+                            style="
+                                display: inline-block;
+                                padding: 0.5rem 0.9rem;
+                                border-radius: 20px;
+                                background: #EFF6FF;
+                                color: #1D4ED8;
+                                font-weight: 600;
+                                font-size: 0.85rem;
+                            "
+                        >
+
+                            Applied
+
+                        </span>
+
+
+                    {% elif application.status == "reviewing" %}
+
+                        <span
+                            style="
+                                display: inline-block;
+                                padding: 0.5rem 0.9rem;
+                                border-radius: 20px;
+                                background: #FEF3C7;
+                                color: #92400E;
+                                font-weight: 600;
+                                font-size: 0.85rem;
+                            "
+                        >
+
+                            Under Review
+
+                        </span>
+
+
+                    {% elif application.status == "interview" %}
+
+                        <span
+                            style="
+                                display: inline-block;
+                                padding: 0.5rem 0.9rem;
+                                border-radius: 20px;
+                                background: #EDE9FE;
+                                color: #6D28D9;
+                                font-weight: 600;
+                                font-size: 0.85rem;
+                            "
+                        >
+
+                            Interview Invited
+
+                        </span>
+
+
+                    {% elif application.status == "hired" %}
+
+                        <span
+                            style="
+                                display: inline-block;
+                                padding: 0.5rem 0.9rem;
+                                border-radius: 20px;
+                                background: #DCFCE7;
+                                color: #166534;
+                                font-weight: 600;
+                                font-size: 0.85rem;
+                            "
+                        >
+
+                            🎉 Hired
+
+                        </span>
+
+
+                    {% elif application.status == "rejected" %}
+
+                        <span
+                            style="
+                                display: inline-block;
+                                padding: 0.5rem 0.9rem;
+                                border-radius: 20px;
+                                background: #FEE2E2;
+                                color: #991B1B;
+                                font-weight: 600;
+                                font-size: 0.85rem;
+                            "
+                        >
+
+                            Rejected
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================= -->
+            <!-- CANDIDATE PROFILE -->
+            <!-- ================================================= -->
+
+            {% if application.applicant.profile %}
+
+                <div
+                    style="
+                        margin-top: 1.5rem;
+                        padding: 1.5rem;
+                        background: var(--bg-body);
+                        border: 1px solid var(--border);
+                        border-radius: 12px;
+                    "
+                >
+
+
+                    <h3
+                        style="
+                            margin-bottom: 1.25rem;
+                            font-size: 1.15rem;
+                        "
+                    >
+
+                        Candidate Profile
+
+                    </h3>
+
+
+                    <!-- Phone -->
+
+                    {% if application.applicant.profile.phone %}
+
+                        <div
+                            style="
+                                margin-bottom: 1rem;
+                            "
+                        >
+
+                            <strong>
+                                Phone
+                            </strong>
+
+                            <p
+                                style="
+                                    margin: 0.25rem 0 0;
+                                    color: var(--text-muted);
+                                "
+                            >
+
+                                {{ application.applicant.profile.phone }}
+
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- Skills -->
+
+                    {% if application.applicant.profile.skills %}
+
+                        <div
+                            style="
+                                margin-bottom: 1rem;
+                            "
+                        >
+
+                            <strong>
+                                Skills
+                            </strong>
+
+                            <p
+                                style="
+                                    margin: 0.25rem 0 0;
+                                    color: var(--text-muted);
+                                    line-height: 1.6;
+                                "
+                            >
+
+                                {{ application.applicant.profile.skills }}
+
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- Education -->
+
+                    {% if application.applicant.profile.education %}
+
+                        <div
+                            style="
+                                margin-bottom: 1rem;
+                            "
+                        >
+
+                            <strong>
+                                Education
+                            </strong>
+
+                            <p
+                                style="
+                                    margin: 0.25rem 0 0;
+                                    color: var(--text-muted);
+                                    line-height: 1.6;
+                                "
+                            >
+
+                                {{ application.applicant.profile.education }}
+
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- Experience -->
+
+                    {% if application.applicant.profile.experience %}
+
+                        <div
+                            style="
+                                margin-bottom: 1rem;
+                            "
+                        >
+
+                            <strong>
+                                Experience
+                            </strong>
+
+                            <p
+                                style="
+                                    margin: 0.25rem 0 0;
+                                    color: var(--text-muted);
+                                    line-height: 1.6;
+                                    white-space: pre-wrap;
+                                "
+                            >
+
+                                {{ application.applicant.profile.experience }}
+
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- ================================================= -->
+                    <!-- RESUME -->
+                    <!-- ================================================= -->
+
+                    <div
+                        style="
+                            margin-top: 1.25rem;
+                            padding-top: 1.25rem;
+                            border-top: 1px solid var(--border);
+                        "
+                    >
+
+                        {% if application.applicant.profile.resume %}
+
+                            <a
+                                href="{{ application.applicant.profile.resume.url }}"
+                                target="_blank"
+                                class="btn"
+                            >
+
+                                📄 View Resume
+
+                            </a>
+
+                        {% else %}
+
+                            <p
+                                style="
+                                    margin: 0;
+                                    color: var(--text-muted);
+                                "
+                            >
+
+                                No resume uploaded by this candidate.
+
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <!-- No Profile -->
+
+                <div
+                    style="
+                        margin-top: 1.25rem;
+                        padding: 1rem;
+                        background: var(--bg-body);
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        color: var(--text-muted);
+                    "
+                >
+
+                    Candidate profile is not available.
+
+                </div>
+
+
+            {% endif %}
+
+
+
+            <!-- ================================================= -->
+            <!-- STATUS UPDATE -->
+            <!-- ================================================= -->
+
+            <div
+                style="
+                    margin-top: 1.5rem;
+                    padding-top: 1.5rem;
+                    border-top: 1px solid var(--border);
+                "
+            >
+
+
+                <form
+                    method="post"
+                    action="{% url 'update-application-status' application.id %}"
+                    style="
+                        display: flex;
+                        align-items: center;
+                        gap: 0.75rem;
+                        flex-wrap: wrap;
+                    "
+                >
+
+                    {% csrf_token %}
+
+
+                    <label
+                        for="status-{{ application.id }}"
+                        style="
+                            font-weight: 600;
+                            color: var(--text-main);
+                        "
+                    >
+
+                        Update Status:
+
+                    </label>
+
+
+                    <select
+                        id="status-{{ application.id }}"
+                        name="status"
+                        style="
+                            padding: 0.65rem 0.8rem;
+                            border: 1px solid var(--border);
+                            border-radius: 6px;
+                            background: var(--bg-body);
+                            color: var(--text-main);
+                            min-width: 180px;
+                        "
+                    >
+
+
+                        <option
+                            value="applied"
+                            {% if application.status == "applied" %}
+                                selected
+                            {% endif %}
+                        >
+
+                            Applied
+
+                        </option>
+
+
+                        <option
+                            value="reviewing"
+                            {% if application.status == "reviewing" %}
+                                selected
+                            {% endif %}
+                        >
+
+                            Under Review
+
+                        </option>
+
+
+                        <option
+                            value="interview"
+                            {% if application.status == "interview" %}
+                                selected
+                            {% endif %}
+                        >
+
+                            Interview Invited
+
+                        </option>
+
+
+                        <option
+                            value="hired"
+                            {% if application.status == "hired" %}
+                                selected
+                            {% endif %}
+                        >
+
+                            Hired
+
+                        </option>
+
+
+                        <option
+                            value="rejected"
+                            {% if application.status == "rejected" %}
+                                selected
+                            {% endif %}
+                        >
+
+                            Rejected
+
+                        </option>
+
+
+                    </select>
+
+
+                    <button
+                        type="submit"
+                        class="btn"
+                    >
+
+                        Update Status
+
+                    </button>
+
+
+                </form>
+
+
+            </div>
+
+
+        </div>
+
+
+    {% endfor %}
+
+
+{% else %}
+
+
+    <!-- ================================================= -->
+    <!-- NO APPLICANTS -->
+    <!-- ================================================= -->
+
+    <div
+        style="
+            padding: 4rem 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        "
+    >
+
+        <div
+            style="
+                font-size: 3rem;
+                margin-bottom: 1rem;
+            "
+        >
+
+            👥
+
+        </div>
+
+
+        <h3
+            style="
+                margin-bottom: 0.5rem;
+                color: var(--text-main);
+            "
+        >
+
+            No applicants yet
+
+        </h3>
+
+
+        <p style="margin: 0;">
+
+            Nobody has applied to this job yet.
+
+        </p>
+
+
+    </div>
+
+
+{% endif %}
+
+
+</div>
+
+{% endblock %}

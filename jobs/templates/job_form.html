@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{% if form.instance.pk %}Update Job{% else %}Post a Job{% endif %} | Job Portal{% endblock %}
+{% block content %}
+<div class="auth-container" style="max-width: 600px;">
+    <div class="card">
+        <h1 style="font-size: 1.875rem; margin-bottom: 0.5rem; text-align: center;">
+            {% if form.instance.pk %}Update Job{% else %}Post a Job{% endif %}
+        </h1>
+        <p style="text-align: center; margin-bottom: 2rem;">
+            {% if form.instance.pk %}Make changes to your job listing.{% else %}Fill out the details below to reach thousands of candidates.{% endif %}
+        </p>
+        
+        <form method="post" class="form-container">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn" style="flex: 2; padding: 0.875rem;">
+                    {% if form.instance.pk %}Save Changes{% else %}Publish Job{% endif %}
+                </button>
+                <a href="{% url 'job-list' %}" class="btn btn-outline" style="flex: 1; padding: 0.875rem; display: flex; align-items: center; justify-content: center;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./env_jobportal/bin/python manage.py shell -c ' *)"
+    ]
+  }
+}

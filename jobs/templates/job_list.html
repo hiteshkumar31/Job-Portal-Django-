@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+{% block title %}Home | Job Portal{% endblock %}
+
+{% block hero %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>Find Your Dream Job Today</h1>
+        <p>Discover thousands of job opportunities with top companies around the world. Your next career move starts here.</p>
+        <div class="hero-actions">
+            <a href="#jobs" class="btn btn-large">Browse Jobs</a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'signup' %}" class="btn btn-outline btn-large">Create an Account</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .hero {
+        background: linear-gradient(135deg, var(--primary-light) 0%, #FFFFFF 100%);
+        padding: 6rem 2rem;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 2rem;
+    }
+    
+    .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .hero h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: var(--text-main);
+        margin-bottom: 1.5rem;
+        line-height: 1.1;
+        letter-spacing: -0.05em;
+    }
+    
+    .hero p {
+        font-size: 1.25rem;
+        color: var(--text-muted);
+        margin-bottom: 2.5rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .btn-large {
+        padding: 0.875rem 2rem;
+        font-size: 1.1rem;
+        border-radius: 0.75rem;
+    }
+    
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-top: 1rem;
+    }
+    
+    .jobs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+        gap: 1.5rem;
+    }
+    
+    .job-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    
+    .job-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary);
+    }
+    
+    .job-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+    
+    .job-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 0.25rem;
+        line-height: 1.3;
+    }
+    
+    .company-name {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--primary);
+    }
+    
+    .job-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        background-color: var(--bg-body);
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+    }
+    
+    .badge-salary { background-color: #ECFDF5; color: #065F46; border-color: #A7F3D0; }
+    
+    .job-card-footer {
+        margin-top: auto;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--bg-surface);
+        border-radius: var(--radius-lg);
+        border: 1px dashed var(--border);
+        color: var(--text-muted);
+        grid-column: 1 / -1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="jobs">
+
+    <!-- ================= SEARCH & FILTER ================= -->
+
+    <div class="card" style="margin-bottom: 2rem; padding: 1.5rem;">
+        <form method="get">
+            <!-- Search Row -->
+            <div class="filter-row" style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <!-- Job Role -->
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 0.4rem;">Job Role</label>
+                    <input type="text" name="search" value="{{ request.GET.search }}" placeholder="e.g. Python Developer, Data Analyst" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body); color: var(--text-main);box-sizing: border-box;" >
+                </div>
+
+                <!-- Location -->
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 0.4rem;">
+                        Location
+                    </label>
+
+                    <input type="text" name="location" value="{{ request.GET.location }}"
+                        placeholder="e.g. Delhi, Noida"
+                        style="width: 100%; padding: 0.75rem; border: 1px solid var(--border);
+                            border-radius: 8px; background: var(--bg-body);
+                            color: var(--text-main); box-sizing: border-box;"
+                    >
+
+                </div>
+
+
+                <!-- Company -->
+
+                <div>
+
+                    <label style="display: block; font-weight: 600; margin-bottom: 0.4rem;">Company</label>
+
+                    <input
+                        type="text"
+                        name="company"
+                        value="{{ request.GET.company }}"
+                        placeholder="e.g. Google"
+                        style="
+                            width: 100%;
+                            padding: 0.75rem;
+                            border: 1px solid var(--border);
+                            border-radius: 8px;
+                            background: var(--bg-body);
+                            color: var(--text-main);
+                            box-sizing: border-box;
+                        "
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Salary Row -->
+
+            <div
+                class="salary-row"
+                style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr auto auto;
+                    gap: 1rem;
+                    align-items: end;
+                "
+            >
+       <!-- Search -->
+
+                <button type="submit" class="btn" style="padding: 0.75rem 1.5rem;">
+                    🔎 Search
+                </button>
+                <!-- Clear -->
+
+                <a href="{% url 'job-list' %}" class="btn btn-outline" style="padding: 0.75rem 1.5rem; text-align: center;">
+                    Clear
+                </a>
+            </div>
+        </form>
+    </div>
+
+
+    <!-- ================= JOB HEADER ================= -->
+
+    <div class="section-header">
+
+        <!-- <h2>Latest Job Opportunities</h2> -->
+
+        {% if is_paginated %}
+
+            <span class="text-muted">
+                Showing {{ page_obj.start_index }}–{{ page_obj.end_index }}
+                of {{ page_obj.paginator.count }} jobs
+            </span>
+
+        {% else %}
+
+            <span class="text-muted">
+                Showing {{ all_jobs|length }} jobs
+            </span>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <div class="section-header">
+        <h2>Latest Job Opportunities</h2>
+        <span class="text-muted">Showing {{ all_jobs|length }} jobs</span>
+    </div>
+
+    <div class="jobs-grid">
+    {% for job in all_jobs %}
+        <a href="{% url 'job-detail' job.pk %}" class="job-card" style="text-decoration: none; color: inherit;">
+            <div class="job-card-header">
+                <div>
+                    <h3 class="job-title">{{ job.title }}</h3>
+                    <div class="company-name">{{ job.company_name }}</div>
+                </div>
+                <div style="background: var(--bg-body); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--primary); font-size: 1.2rem;">
+                    {{ job.company_name|make_list|first|upper }}
+                </div>
+            </div>
+            
+            <div class="job-badges">
+                <span class="badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    {{ job.location }}
+                </span>
+                <span class="badge badge-salary">
+                    <span style="margin-right: 4px; font-weight: bold;">&#8377;</span>{{ job.salary }}
+                </span>
+            </div>
+            
+            <div class="job-card-footer">
+                <span style="font-size: 0.85rem; color: var(--text-muted);">Posted recently</span>
+                <span style="color: var(--primary); font-weight: 600; font-size: 0.9rem;">View Details &rarr;</span>
+            </div>
+        </a>
+    {% empty %}
+        <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 1rem; color: var(--text-muted);">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            </svg>
+            <h3 style="margin-bottom: 0.5rem; color: var(--text-main);">No jobs posted yet</h3>
+            <p>Check back later for new opportunities.</p>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}

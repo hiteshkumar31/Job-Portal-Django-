@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Log In | Job Portal{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="card" style="text-align: center;">
+        <div style="background: var(--primary-light); width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 1.5rem auto; display: flex; align-items: center; justify-content: center; color: var(--primary);">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                <polyline points="10 17 15 12 10 7"></polyline>
+                <line x1="15" y1="12" x2="3" y2="12"></line>
+            </svg>
+        </div>
+        
+        <h1 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Welcome back</h1>
+        <p style="margin-bottom: 2rem;">Please enter your details to sign in.</p>
+        
+        <form method="post" class="form-container" style="text-align: left;">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn" style="width: 100%; margin-top: 1rem; padding: 0.875rem;">Sign In</button>
+        </form>
+        
+        <p style="margin-top: 2rem; font-size: 0.95rem;">
+            Don't have an account? <a href="{% url 'signup' %}" style="font-weight: 600;">Sign up</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}My Posted Jobs | Job Portal{% endblock %}
+{% block content %}
+<div class="mb-4" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">My Posted Jobs</h1>
+        <p style="margin: 0;">Manage your active job listings.</p>
+    </div>
+    <a href="{% url 'job-create' %}" class="btn">Post a New Job</a>
+</div>
+
+<div class="card" style="padding: 0; overflow: hidden;">
+    {% if jobs %}
+        <ul style="list-style: none; margin: 0; padding: 0;">
+        {% for job in jobs %}
+            <li style="border-bottom: 1px solid var(--border); padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h3 style="margin-bottom: 0.25rem;">
+                        <a href="{% url 'job-detail' job.pk %}" style="color: var(--text-main);">{{ job.title }}</a>
+                    </h3>
+                    <div style="color: var(--text-muted); font-size: 0.9rem; display: flex; gap: 1rem; align-items: center;">
+                        <span>Posted on {{ job.date_posted|date:"M d, Y" }}</span>
+                        <span style="display: inline-block; width: 4px; height: 4px; background: var(--border); border-radius: 50%;"></span>
+                        <span>{{ job.location }}</span>
+                    </div>
+                </div>
+<div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+
+    <a
+        href="{% url 'job-applicants' job.pk %}"
+        class="btn"
+        style="
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        "
+    >
+        View Applicants
+    </a>
+
+    <a
+        href="{% url 'job-update' job.pk %}"
+        class="btn btn-outline"
+        style="
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        "
+    >
+        Edit
+    </a>
+
+    <a
+        href="{% url 'job-delete' job.pk %}"
+        class="btn btn-outline"
+        style="
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            color: #DC2626;
+            border-color: #FECACA;
+            background-color: #FEF2F2;
+        "
+    >
+        Delete
+    </a>
+
+</div>
+            </li>
+        {% endfor %}
+        </ul>
+
+        <!-- PAGINATION -->
+        {% if is_paginated %}
+        <div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; padding: 1.5rem; border-top: 1px solid var(--border); flex-wrap: wrap;">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline">&larr; Previous</a>
+            {% endif %}
+
+            <span style="padding: 0.6rem 1rem; font-weight: 600; color: var(--text-main);">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn">Next &rarr;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% else %}
+        <div style="padding: 4rem 2rem; text-align: center; color: var(--text-muted);">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem; opacity: 0.5;">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            <h3 style="margin-bottom: 0.5rem; color: var(--text-main);">No jobs posted yet</h3>
+            <p style="margin-bottom: 1.5rem;">Create your first job listing to find great candidates.</p>
+            <a href="{% url 'job-create' %}" class="btn">Post a Job</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

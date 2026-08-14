@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+
+{% block title %}My Applications | Job Portal{% endblock %}
+
+{% block content %}
+
+<div class="mb-4">
+    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">
+        My Applications
+    </h1>
+
+    <p>Track all the jobs you have applied for.</p>
+</div>
+
+
+<div class="card" style="padding: 0; overflow: hidden;">
+
+    {% if applications %}
+
+        <ul style="list-style: none; margin: 0; padding: 0;">
+
+        {% for application in applications %}
+
+            <li style="
+                border-bottom: 1px solid var(--border);
+                padding: 1.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+            ">
+
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    gap: 1.5rem;
+                ">
+
+                <!-- Job Information -->
+
+                <div>
+
+                    <h3 style="margin-bottom: 0.25rem;">
+
+                        <a
+                            href="{% url 'job-detail' application.job.pk %}"
+                            style="color: var(--text-main);"
+                        >
+                            {{ application.job.title }}
+                        </a>
+
+                    </h3>
+
+                    <div style="
+                        color: var(--primary);
+                        font-weight: 500;
+                        font-size: 0.95rem;
+                    ">
+                        {{ application.job.company_name }}
+                    </div>
+
+                </div>
+
+
+                <!-- Application Status -->
+
+                <div style="text-align: center;">
+
+                    <div style="
+                        font-size: 0.8rem;
+                        color: var(--text-muted);
+                        margin-bottom: 0.4rem;
+                    ">
+                        Application Status
+                    </div>
+
+
+                    {% if application.status == 'applied' %}
+
+                        <span style="
+                            display: inline-block;
+                            padding: 0.45rem 0.9rem;
+                            border-radius: 20px;
+                            background: #EFF6FF;
+                            color: #1D4ED8;
+                            font-weight: 600;
+                            font-size: 0.85rem;
+                        ">
+                            Applied
+                        </span>
+
+
+                    {% elif application.status == 'reviewing' %}
+
+                        <span style="
+                            display: inline-block;
+                            padding: 0.45rem 0.9rem;
+                            border-radius: 20px;
+                            background: #FEF3C7;
+                            color: #92400E;
+                            font-weight: 600;
+                            font-size: 0.85rem;
+                        ">
+                            Under Review
+                        </span>
+
+
+                    {% elif application.status == 'interview' %}
+
+                        <span style="
+                            display: inline-block;
+                            padding: 0.45rem 0.9rem;
+                            border-radius: 20px;
+                            background: #EDE9FE;
+                            color: #6D28D9;
+                            font-weight: 600;
+                            font-size: 0.85rem;
+                        ">
+                            Interview Invited
+                        </span>
+
+
+                    {% elif application.status == 'hired' %}
+
+                        <span style="
+                            display: inline-block;
+                            padding: 0.45rem 0.9rem;
+                            border-radius: 20px;
+                            background: #DCFCE7;
+                            color: #166534;
+                            font-weight: 600;
+                            font-size: 0.85rem;
+                        ">
+                            🎉 Hired
+                        </span>
+
+
+                    {% elif application.status == 'rejected' %}
+
+                        <span style="
+                            display: inline-block;
+                            padding: 0.45rem 0.9rem;
+                            border-radius: 20px;
+                            background: #FEE2E2;
+                            color: #991B1B;
+                            font-weight: 600;
+                            font-size: 0.85rem;
+                        ">
+                            Rejected
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Applied Date -->
+
+                <div style="
+                    text-align: right;
+                    color: var(--text-muted);
+                    font-size: 0.9rem;
+                ">
+
+                    <div>
+                        Applied on
+                    </div>
+
+                    <div style="
+                        font-weight: 500;
+                        color: var(--text-main);
+                    ">
+                        {{ application.date_applied|date:"M d, Y" }}
+                    </div>
+
+                </div>
+
+
+                </div>
+
+            <!-- Interview Message -->
+
+            {% if application.status == 'interview' %}
+
+                <div style="
+                    padding: 1rem;
+                    background: #F5F3FF;
+                    border: 1px solid #DDD6FE;
+                    border-radius: 8px;
+                ">
+
+                    <strong style="color: #6D28D9;">
+                        🎉 Interview Invitation
+                    </strong>
+
+                    <p style="
+                        margin: 0.5rem 0 0;
+                        color: #5B21B6;
+                    ">
+                        The employer has invited you for an interview.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- Hired Message -->
+
+            {% if application.status == 'hired' %}
+
+                <div style="
+                    padding: 1rem;
+                    background: #F0FDF4;
+                    border: 1px solid #BBF7D0;
+                    border-radius: 8px;
+                ">
+
+                    <strong style="color: #166534;">
+                        🎉 Congratulations!
+                    </strong>
+
+                    <p style="
+                        margin: 0.5rem 0 0;
+                        color: #166534;
+                    ">
+                        You have been selected for this position.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- Rejected Message -->
+
+            {% if application.status == 'rejected' %}
+
+                <div style="
+                    padding: 1rem;
+                    background: #FEF2F2;
+                    border: 1px solid #FECACA;
+                    border-radius: 8px;
+                ">
+
+                    <strong style="color: #991B1B;">
+                        Application Rejected
+                    </strong>
+
+                    <p style="
+                        margin: 0.5rem 0 0;
+                        color: #991B1B;
+                    ">
+                        Unfortunately, your application was not selected
+                        for this position.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+            </li>
+
+
+        {% endfor %}
+
+        </ul>
+            <!-- PAGINATION -->
+
+    {% if is_paginated %}
+
+        <div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; padding: 1.5rem; border-top: 1px solid var(--border); flex-wrap: wrap;">
+
+            {% if page_obj.has_previous %}
+
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline">
+                    &larr; Previous
+                </a>
+
+            {% endif %}
+
+            <span style="padding: 0.6rem 1rem; font-weight: 600; color: var(--text-main);">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+
+            {% if page_obj.has_next %}
+
+                <a href="?page={{ page_obj.next_page_number }}" class="btn">
+                    Next &rarr;
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+
+{% else %}
+
+        <div style="
+            padding: 4rem 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        ">
+
+            <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="margin-bottom: 1rem; opacity: 0.5;"
+            >
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+
+            <h3 style="
+                margin-bottom: 0.5rem;
+                color: var(--text-main);
+            ">
+                No applications yet
+            </h3>
+
+            <p style="margin-bottom: 1.5rem;">
+                You haven't applied to any jobs yet.
+            </p>
+
+            <a
+                href="{% url 'job-list' %}"
+                class="btn"
+            >
+                Explore Jobs
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
